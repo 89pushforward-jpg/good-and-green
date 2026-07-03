@@ -166,6 +166,22 @@ header{position:sticky;top:0;z-index:60;background:rgba(251,253,249,.95);backdro
 .more-strip{margin-top:26px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;font-size:14.5px;color:var(--ink-soft);font-weight:600}
 .more-strip b{color:var(--green-deep)}
 
+/* G&G range */
+.gg{background:var(--cream)}
+.gg-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:36px}
+.gg-cats{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 34px}
+.gg-cat{background:var(--sage);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:13px;font-weight:800;color:var(--green-deep)}
+.gg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.gg-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:6px;transition:transform .2s,box-shadow .2s}
+.gg-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.gg-card .cap{width:38px;height:38px;border-radius:10px;background:var(--sage);display:grid;place-items:center;font-size:18px;margin-bottom:6px}
+.gg-card h4{font-size:15.5px;font-weight:800;color:var(--green-deep)}
+.gg-card span{font-size:12.5px;color:var(--muted)}
+.gg-card b{font-family:var(--font-display);font-size:19px;color:var(--earth);margin-top:4px}
+.gg-note{margin-top:24px;background:var(--sage);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;font-size:14.5px;color:var(--ink-soft);font-weight:600}
+@media(max-width:960px){.gg-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.gg-grid{grid-template-columns:1fr}}
+
 /* brands */
 .brands{padding:64px 0}
 .brand-row{display:flex;flex-wrap:wrap;gap:12px}
@@ -278,6 +294,7 @@ footer a:hover{color:var(--amber)}
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#range">What We Stock</a>
+      <a href="#gg-range">G&amp;G Range</a>
       <a href="#brands">Brands</a>
       <a href="#story">Our Story</a>
       <a href="#reviews">Reviews</a>
@@ -309,7 +326,7 @@ footer a:hover{color:var(--amber)}
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><b>1,200+</b><span>product lines in store</span></div>
-        <div class="hero-stat"><b>50+ yrs</b><span>family vitamin expertise</span></div>
+        <div class="hero-stat"><b>1965</b><span>G&amp;G Vitamins — made in Sussex</span></div>
         <div class="hero-stat"><b>4.8★</b><span>Google rating</span></div>
       </div>
     </div>
@@ -383,6 +400,29 @@ footer a:hover{color:var(--amber)}
   </div>
 </section>
 
+<!-- G&G Vitamins range -->
+<section class="gg" id="gg-range">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">The G&amp;G Vitamins range</span>
+      <h2>Made in Sussex since 1965 — sold right here</h2>
+      <p>We're the retail home of <b>G&amp;G Vitamins</b> — a family-run British manufacturer making capsule supplements (never tablets) at their own Sussex factory for 60 years. The full range lives on our shelves, and we can order anything in.</p>
+    </div>
+    <div class="gg-cats reveal">
+      <span class="gg-cat">Vitamins A–K</span><span class="gg-cat">Minerals</span><span class="gg-cat">Multivitamins</span><span class="gg-cat">Omega Oils</span><span class="gg-cat">Live Bacteria</span><span class="gg-cat">Collagen</span><span class="gg-cat">Turmeric</span><span class="gg-cat">Superfoods</span><span class="gg-cat">Botanicals</span><span class="gg-cat">Amino Acids</span><span class="gg-cat">Bee Products</span><span class="gg-cat">Children's</span><span class="gg-cat">Organic &amp; Vegan</span><span class="gg-cat">Drink Powders</span><span class="gg-cat">Specialist Blends</span>
+    </div>
+    <div class="gg-grid">
+      <div class="gg-card reveal"><span class="cap">🍊</span><h4>Vitamin C Complex 1000mg</h4><span>120 capsules</span><b>£12</b></div>
+      <div class="gg-card reveal"><span class="cap">🐟</span><h4>Omega 3 Fish Oil 3000mg</h4><span>90 softgels</span><b>£15</b></div>
+      <div class="gg-card reveal"><span class="cap">✨</span><h4>Triple Magnesium Complex</h4><span>90 capsules</span><b>£12</b></div>
+      <div class="gg-card reveal"><span class="cap">💛</span><h4>Turmeric &amp; Curcumin</h4><span>60 capsules</span><b>£12</b></div>
+      <div class="gg-card reveal"><span class="cap">⚡</span><h4>CoQ10 100mg</h4><span>60 capsules</span><b>£17</b></div>
+      <div class="gg-card reveal"><span class="cap">🧰</span><h4>28 Day Basic Balance Pack</h4><span>Daily essentials, sorted</span><b>£26</b></div>
+    </div>
+    <div class="gg-note reveal">💊 Browse by need in store — <b>immune · digestion · sleep · joints · heart · fitness · women's &amp; men's health</b> — and our team will point you to the right capsule, not the most expensive one.</div>
+  </div>
+</section>
+
 <!-- brands -->
 <section class="brands" id="brands">
   <div class="container">
@@ -410,12 +450,12 @@ footer a:hover{color:var(--amber)}
 <section class="story" id="story">
   <div class="container">
     <div class="reveal">
-      <div class="story-badge"><b>50+</b><span>years of vitamin<br>know-how</span></div>
+      <div class="story-badge"><b>60</b><span>years of vitamin<br>know-how · est. 1965</span></div>
     </div>
     <div class="reveal">
       <span class="kicker" style="color:#a9d8a8">Our story</span>
       <h2>The shop with a vitamin factory behind it</h2>
-      <p>Good &amp; Green opened in 2016 as the retail home of G&amp;G Vitamins — a family-run East Grinstead company that has been making encapsulated vitamins for over 50 years and ships them to more than 50 countries. In other words: the people selling you supplements here actually make them.</p>
+      <p>Good &amp; Green opened in 2016 as the retail home of G&amp;G Vitamins — a family-run Sussex manufacturer making capsule supplements since 1965, shipped to more than 50 countries. In other words: the people selling you supplements here actually make them.</p>
       <div class="story-points">
         <div class="story-point">Founded by Lizzie Calcioli — as organic and local as possible, from day one</div>
         <div class="story-point">1,200+ product lines packed into one friendly shop on London Road</div>

@@ -356,42 +356,42 @@ footer a:hover{color:var(--amber)}
     </div>
     <div class="cats-grid">
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=800&q=60&auto=format&fit=crop" alt="Vitamins and supplements" loading="lazy">
+        <img src="assets/cat-vitamins.jpg" alt="Vitamins and supplements" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Vitamins &amp; Supplements</h3><p>Our home turf — G&amp;G Vitamins made right here in East Grinstead, plus Viridian &amp; Higher Nature.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=800&q=60&auto=format&fit=crop" alt="Honey and natural sweeteners" loading="lazy">
+        <img src="assets/cat-honey.jpg" alt="Honey and natural sweeteners" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Honey &amp; Natural Sweeteners</h3><p>Raw and local honeys, syrups and better ways to sweeten.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1638176066666-ffb2f013c7dd?w=800&q=60&auto=format&fit=crop" alt="Sports nutrition and electrolytes" loading="lazy">
+        <img src="assets/cat-sports.jpg" alt="Sports nutrition and electrolytes" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Sports &amp; Electrolytes</h3><p>Hydration, protein and recovery — without the neon-tub nonsense.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=60&auto=format&fit=crop" alt="Organic chocolate" loading="lazy">
+        <img src="assets/cat-chocolate.jpg" alt="Organic chocolate" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Organic Chocolate &amp; Treats</h3><p>Booja-Booja truffles plus local heroes Cocoa Loco and Conscious Chocolate.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=800&q=60&auto=format&fit=crop" alt="Herbal teas" loading="lazy">
+        <img src="assets/cat-tea.jpg" alt="Herbal teas" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Herbal Teas</h3><p>Shelves of blends — including Higher Living, blended locally.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=800&q=60&auto=format&fit=crop" alt="Wholefoods nuts and seeds" loading="lazy">
+        <img src="assets/cat-wholefoods.jpg" alt="Wholefoods nuts and seeds" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Wholefoods &amp; Pantry</h3><p>Nuts, seeds, grains, pastas, cereals — organic and free-from staples.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1579113800032-c38bd7635818?w=800&q=60&auto=format&fit=crop" alt="Fresh organic produce and sourdough" loading="lazy">
+        <img src="assets/cat-fresh.jpg" alt="Fresh organic produce and sourdough" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Fresh &amp; Local</h3><p>Fresh sourdough (reviewers rave), vegan cheeses and chilled goodies.</p></div>
       </div>
       <div class="cat-card reveal">
-        <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&q=60&auto=format&fit=crop" alt="Natural beauty and skincare" loading="lazy">
+        <img src="assets/cat-beauty.jpg" alt="Natural beauty and skincare" loading="lazy">
         <div class="veil"></div>
         <div class="label"><h3>Natural Beauty &amp; Home</h3><p>Organic skincare, vegan makeup, baby care and Bio-D eco household refills.</p></div>
       </div>
@@ -586,7 +586,11 @@ burger.addEventListener('click',()=>navLinks.classList.toggle('open'));
 navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
 (function(){
   const hours={0:[10,16],1:[9,17.5],2:[9,17.5],3:[9,17.5],4:[9,17.5],5:[9,17.5],6:[9,17.5]};
-  const now=new Date(),d=now.getDay(),h=now.getHours()+now.getMinutes()/60;
+  // Always compute from the shop's local time (UK), regardless of the visitor's timezone.
+  const uk=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+  const wk={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+  const d=wk[uk.find(p=>p.type==='weekday').value];
+  const h=(+uk.find(p=>p.type==='hour').value)+(+uk.find(p=>p.type==='minute').value)/60;
   const today=hours[d];
   const open=today&&h>=today[0]&&h<today[1];
   const badge=document.getElementById('openBadge'),txt=document.getElementById('openText');

@@ -69,12 +69,17 @@ h2{font-size:clamp(31px,4.2vw,45px);color:var(--green-deep);font-weight:700}
 .section-head p{color:var(--muted);margin-top:12px;font-size:16.5px}
 
 /* topbar */
-.topbar{background:var(--green-deep);color:#c4d8c6;font-size:13px;padding:7px 0}
-.topbar .container{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.topbar strong{color:#fff}
-.topbar .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;background:#4ade80}
-.topbar .dot.shut{background:#ff9a8f}
-.topbar a{font-weight:700;color:#fff}
+.topbar{background:var(--green-deep);color:#c4d8c6;font-size:13px;padding:8px 0;letter-spacing:.4px}
+.topbar .container{display:flex;justify-content:space-between;align-items:center;gap:12px;white-space:nowrap}
+.topbar .addr{color:#c4d8c6}
+.status{display:inline-flex;align-items:center;gap:9px;font-weight:600;color:#e3eee1}
+.status .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:#c4d8c6}
+.status .state{font-weight:800;letter-spacing:.5px}
+.status.open .dot{background:#4ade80;animation:statusPulse 2s infinite}
+.status.open .state{color:#8ff0ad}
+.status.closed .dot{background:#ff9a8f;box-shadow:0 0 8px rgba(255,154,143,.75)}
+.status.closed .state{color:#ffb3a7}
+@keyframes statusPulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.55)}70%{box-shadow:0 0 0 8px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
 @media(max-width:720px){.topbar .addr{display:none}}
 
 /* header */
@@ -275,11 +280,11 @@ footer a:hover{color:var(--amber)}
 <!-- topbar -->
 <div class="topbar">
   <div class="container">
-    <div>
-      <span class="dot" id="topDot"></span><strong id="topStatus">Open today</strong> <span id="today-hours">09:00–17:30</span>
-      <span class="addr"> · 25 London Road, East Grinstead RH19 1AL</span>
-    </div>
-    <a href="tel:+441342777888">☎ 01342 777888</a>
+    <span class="status" id="statusPill" aria-live="polite">
+      <span class="dot"></span>
+      <span id="statusText"><b class="state">Open now</b> · 9am–5:30pm</span>
+    </span>
+    <span class="addr">25 London Road, East Grinstead RH19 1AL</span>
   </div>
 </div>
 
@@ -585,24 +590,43 @@ const burger=document.getElementById('burger'),navLinks=document.getElementById(
 burger.addEventListener('click',()=>navLinks.classList.toggle('open'));
 navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
 (function(){
+  const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  // weekday 0=Sun..6=Sat, [open,close] in decimal hours (17.5 = 17:30). Missing = closed.
   const hours={0:[10,16],1:[9,17.5],2:[9,17.5],3:[9,17.5],4:[9,17.5],5:[9,17.5],6:[9,17.5]};
-  // Always compute from the shop's local time (UK), regardless of the visitor's timezone.
-  const uk=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
-  const wk={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
-  const d=wk[uk.find(p=>p.type==='weekday').value];
-  const h=(+uk.find(p=>p.type==='hour').value)+(+uk.find(p=>p.type==='minute').value)/60;
-  const today=hours[d];
-  const open=today&&h>=today[0]&&h<today[1];
-  const badge=document.getElementById('openBadge'),txt=document.getElementById('openText');
-  badge.classList.add(open?'open':'shut');
-  txt.textContent=open?'Open now':'Closed now';
-  const topDot=document.getElementById('topDot'),topStatus=document.getElementById('topStatus');
-  if(!open)topDot.classList.add('shut');
-  topStatus.textContent=open?'Open today':'Closed now';
-  const row=document.querySelector('#hoursTable tr[data-day="'+d+'"]');
-  if(row)row.classList.add('today');
-  const fmt=t=>String(Math.floor(t)).padStart(2,'0')+':'+String(Math.round((t%1)*60)).padStart(2,'0');
-  document.getElementById('today-hours').textContent=today?fmt(today[0])+'–'+fmt(today[1]):'';
+  const tz='Europe/London'; // always the shop's time, whatever the visitor's timezone
+  const fmt=dec=>{const h=Math.floor(dec),m=Math.round((dec-h)*60),ap=h>=12?'pm':'am';let hr=h%12;if(hr===0)hr=12;return hr+(m?(':'+(m<10?'0':'')+m):'')+ap;};
+  function nowUK(){
+    const p=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    const h=+p.find(x=>x.type==='hour').value,m=+p.find(x=>x.type==='minute').value;
+    const wd=new Date().toLocaleString('en-US',{timeZone:tz,weekday:'long'});
+    return {day:DAYS.indexOf(wd),mins:h*60+m};
+  }
+  const pill=document.getElementById('statusPill'),stxt=document.getElementById('statusText');
+  const badge=document.getElementById('openBadge'),otxt=document.getElementById('openText');
+  function render(){
+    const t=nowUK(),today=hours[t.day];
+    const open=today&&t.mins>=today[0]*60&&t.mins<today[1]*60;
+    if(open){
+      pill.className='status open';
+      stxt.innerHTML='<b class="state">Open now</b> · '+fmt(today[0])+'–'+fmt(today[1]);
+    }else{
+      let label='';
+      for(let i=0;i<8;i++){const d=(t.day+i)%7,hrs=hours[d];if(!hrs)continue;
+        if(i===0){if(t.mins<hrs[0]*60){label='today '+fmt(hrs[0]);break;}continue;}
+        if(i===1){label='tomorrow '+fmt(hrs[0]);break;}
+        label=DAYS[d]+' '+fmt(hrs[0]);break;}
+      pill.className='status closed';
+      stxt.innerHTML='<b class="state">Closed</b>'+(label?' · opens '+label:'');
+    }
+    // contact-section badge mirrors the same state
+    if(badge){badge.className='open-badge '+(open?'open':'shut');otxt.textContent=open?'Open now':'Closed now';}
+    // highlight today's row in the opening-hours table
+    document.querySelectorAll('#hoursTable tr.today').forEach(r=>r.classList.remove('today'));
+    const row=document.querySelector('#hoursTable tr[data-day="'+t.day+'"]');
+    if(row)row.classList.add('today');
+  }
+  render();
+  setInterval(render,30000);
 })();
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
